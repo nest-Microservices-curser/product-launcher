@@ -4,3 +4,6 @@
 [submodule "order-ms"]
 	path = order-ms
 	url = https://github.com/nest-Microservices-curser/order-ms.git
+[submodule "products-microservices"]
+	path = products-microservices
+	url = https://github.com/nest-Microservices-curser/products-microservices.git
