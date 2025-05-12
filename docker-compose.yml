@@ -31,22 +31,23 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=file:./dev.db
 
-  order-db:
+  # Orders DB
+  orders-db:
     container_name: orders_database
     image: postgres:16.2
     restart: always
     volumes:
-      - ./orders-ms/postgres-data:/var/lib/postgresql/data
+      - ./orders-ms/postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
-      - POSTGRES_USER= postgres
-      - POSTGRES_PASSWORD= 123456
-      - POSTGRES_DB= ordersDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=ordersdb
 
   order-ms:
     depends_on:
-      - order-db
+      - orders-db
     build: ./orders-ms
     ports:
       - "3002:3002"
@@ -55,7 +56,7 @@ services:
     command: npm run start:dev
     environment:
       - PORT=3002
+      - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
       - NATS_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=postgresql://postgres:123456@order-db:5432/ordersDb?schema=public
       - PRODUCT_MICROSERVICE_HOST=localhost
       - PRODUCT_MICROSERVICE_PORT=3001
